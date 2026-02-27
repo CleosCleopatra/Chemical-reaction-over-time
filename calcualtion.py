@@ -5,7 +5,7 @@ import seaborn as sns
 L = 128
 Dvs = [2.3, 3, 5, 9]
 time_step = 0.01
-n_steps = 5000
+n_steps = 30000
 q = 1
 Du = 1
 a = 3
@@ -52,11 +52,11 @@ u01, v01 = initiation(L, u, v)
 vmin = 0
 vmax = 12.2
 
-found_max = 0
-found_min = 0
 for Dv in Dvs:
     u = u01.copy()
     v = v01.copy()
+    u_old = u.copy()
+    steps_steady = 0
     for t in range(n_steps):
         new_u = laplacian(u)
         new_v = laplacian(v)
@@ -68,10 +68,20 @@ for Dv in Dvs:
         u += dudt * time_step
         v += dvdt * time_step
     
-        if t == 1000 or t == 2000 or t == 3000 or t == 4000 or t == 4999:
+        if t == 1000:
             sns.heatmap(u, cmap = "viridis", vmin=vmin, vmax=vmax)
             plt.title(f"u at time = {t} for Dv = {Dv}")
             plt.show()
+        if t >= 1000 and np.max(np.abs(u - u_old)) < 1e-3:
+            steps_steady += 1
+            if steps_steady >= 50:
+                sns.heatmap(u, cmap = "viridis", vmin=vmin, vmax=vmax)
+                plt.title(f"u at time = {t} for Dv = {Dv}")
+                plt.show()
+                break
+        elif np.max(np.abs(u - u_old)) >= 1e-3:
+            steps_steady = 0
+        u_old = u.copy()
 
 
 
