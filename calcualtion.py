@@ -19,8 +19,8 @@ def initiation(L, u, v):
     v0 = np.zeros((L, L))
     for i in range(L):
         for j in range(L):
-            u0[i, j] = u * (1 + 0.1 * np.random.rand())
-            v0[i, j] = v * (1 + 0.1 * np.random.rand())
+            u0[i, j] = u * (1 + 0.1 * (2*np.random.rand() - 1))
+            v0[i, j] = v * (1 + 0.1 * (2*np.random.rand() - 1))
     return u0, v0
 
 def calculate_k_values(DA, J11, J22, DI, detJ):
